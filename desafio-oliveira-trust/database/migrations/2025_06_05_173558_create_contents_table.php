@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('upload_id')->constrained('uploads')->onDelete('cascade');
-            $table->date('RptDt');
+            $table->dateTime('RptDt');
             $table->string('TckrSymb');
             $table->string('MktNm');
             $table->string('SctyCtgyNm');

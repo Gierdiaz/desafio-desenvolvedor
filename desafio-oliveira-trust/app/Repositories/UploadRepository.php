@@ -20,12 +20,12 @@ class UploadRepository
     {
         $query = $this->model->query();
 
-        if (!empty($filters['file_name'])) {
-            $query->where('file_name', 'like', '%' . $filters['file_name'] . '%');
+        if (! empty($filters['file_name'])) {
+            $query->where('file_name', 'like', '%'.$filters['file_name'].'%');
         }
 
-        if (!empty($filters['reference_date'])) {
-           $query->where('reference_date', 'like', $filters['reference_date'] . '%');
+        if (! empty($filters['reference_date'])) {
+            $query->where('reference_date', 'like', $filters['reference_date'].'%');
         }
 
         return $query->orderBy('created_at', 'desc')->paginate(10);

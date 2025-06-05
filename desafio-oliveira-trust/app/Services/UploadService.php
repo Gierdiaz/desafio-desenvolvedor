@@ -3,11 +3,10 @@
 namespace App\Services;
 
 use App\DTOs\UploadDTO;
-use App\Repositories\UploadRepository;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
 use App\Http\Requests\FileRequest;
+use App\Repositories\UploadRepository;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class UploadService
 {
