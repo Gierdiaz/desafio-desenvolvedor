@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ContentResource;
 use App\Services\ContentService;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,6 @@ class ContentController extends Controller
 
         $contents = $this->service->getContent($filters);
 
-        return response()->json($contents);
+        return ContentResource::collection($contents);
     }
 }
