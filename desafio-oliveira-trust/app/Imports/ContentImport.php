@@ -8,52 +8,54 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
-class ContentImport implements ToCollection, WithChunkReading, WithHeadingRow, WithCustomCsvSettings
+HeadingRowFormatter::default('none');
+
+class ContentImport implements ToCollection, WithChunkReading, WithCustomCsvSettings, WithHeadingRow
 {
-    private int $uploadId;
-    public int $rows = 0;
+    private $uploadId;
 
-    public function __construct(int $uploadId)
+    public function __construct($uploadId)
     {
         $this->uploadId = $uploadId;
     }
 
     public function collection(Collection $rows)
     {
-        $data = [];
-
         foreach ($rows as $row) {
-            $this->rows++;
+            if (
+                empty($row['RptDt']) ||
+                empty($row['TckrSymb']) ||
+                empty($row['MktNm']) ||
+                empty($row['SctyCtgyNm']) ||
+                empty($row['ISIN']) ||
+                empty($row['CrpnNm'])
+            ) {
+                continue;
+            }
 
-            $data[] = [
-                'upload_id'    => $this->uploadId,
-                'RptDt'        => $row['RptDt'] ?? null,
-                'TckrSymb'     => $row['TckrSymb'] ?? null,
-                'MktNm'        => $row['MktNm'] ?? null,
-                'SctyCtgyNm'   => $row['SctyCtgyNm'] ?? null,
-                'ISIN'         => $row['ISIN'] ?? null,
-                'CrpnNm'       => $row['CrpnNm'] ?? null,
-                'created_at'   => now(),
-                'updated_at'   => now(),
-            ];
+            Content::create([
+                'upload_id' => $this->uploadId,
+                'RptDt' => $row['RptDt'],
+                'TckrSymb' => $row['TckrSymb'],
+                'MktNm' => $row['MktNm'],
+                'SctyCtgyNm' => $row['SctyCtgyNm'],
+                'ISIN' => $row['ISIN'],
+                'CrpnNm' => $row['CrpnNm'],
+            ]);
         }
+    }
 
-        Content::insert($data);
+    public function chunkSize(): int
+    {
+        return 1000;
     }
 
     public function getCsvSettings(): array
     {
         return [
             'delimiter' => ';',
-            'enclosure' => '"',
-            'escape_character' => '\\',
-            'input_encoding' => 'UTF-8',
         ];
-    }
-
-    public function chunkSize(): int
-    {
-        return 1000;
     }
 }

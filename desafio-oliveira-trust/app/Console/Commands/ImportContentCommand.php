@@ -26,18 +26,16 @@ class ImportContentCommand extends Command
         }
 
         ini_set('memory_limit', '2G');
-        ini_set('max_execution_time', '0');
+        ini_set('max_execution_time', 0);
 
         $this->info("Iniciando importação do arquivo: {$filename}");
 
         try {
             $upload = Upload::firstOrCreate(['file_name' => basename($filename)]);
 
-            $import = new ContentImport($upload->id);
-            Excel::import($import, $path);
+            Excel::import(new ContentImport($upload->id), $path);
 
             $this->info('Importação concluída com sucesso!');
-            $this->info("Total de linhas importadas: {$import->rows}");
         } catch (\Exception $e) {
             $this->error('Erro durante a importação: '.$e->getMessage());
         }
