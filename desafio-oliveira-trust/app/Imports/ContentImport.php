@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
+// Serve para evitar que o Laravel Excel altere o cabeçalho quando eu uso a interface WithHeadingRow
 HeadingRowFormatter::default('none');
 
 class ContentImport implements ToCollection, WithChunkReading, WithCustomCsvSettings, WithHeadingRow
@@ -24,16 +25,6 @@ class ContentImport implements ToCollection, WithChunkReading, WithCustomCsvSett
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            if (
-                empty($row['RptDt']) ||
-                empty($row['TckrSymb']) ||
-                empty($row['MktNm']) ||
-                empty($row['SctyCtgyNm']) ||
-                empty($row['ISIN']) ||
-                empty($row['CrpnNm'])
-            ) {
-                continue;
-            }
 
             Content::create([
                 'upload_id' => $this->uploadId,
