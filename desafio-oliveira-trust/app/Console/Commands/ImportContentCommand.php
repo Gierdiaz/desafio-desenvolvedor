@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use App\Imports\ContentImport;
@@ -19,7 +18,7 @@ class ImportContentCommand extends Command
         $filename = $this->argument('filename');
         $path     = storage_path("app/{$filename}");
 
-        if (!File::exists($path)) {
+        if (! File::exists($path)) {
             $this->error("Arquivo CSV não encontrado: {$path}");
 
             return;
@@ -31,7 +30,7 @@ class ImportContentCommand extends Command
         $this->info("Iniciando importação do arquivo: {$filename}");
 
         try {
-            $upload = Upload::firstOrCreate(['file_name' => basename($filename)]);
+            $upload = Upload::firstOrCreate(['file' => basename($filename)]);
 
             Excel::import(new ContentImport($upload->id), $path);
 

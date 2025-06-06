@@ -1,8 +1,7 @@
 <?php
-
 namespace App\DTOs;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\FileRequest;
 
 class UploadDTO
 {
@@ -13,7 +12,7 @@ class UploadDTO
     ) {
     }
 
-    public static function fromRequest(Request $request, string $filePath): self
+    public static function fromRequest(FileRequest $request, string $filePath): self
     {
         return new self(
             file_name: $request->file('file')->getClientOriginalName(),

@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Services;
 
 use App\DTOs\UploadDTO;
 use App\Http\Requests\FileRequest;
 use App\Repositories\UploadRepository;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class UploadService
@@ -26,15 +24,12 @@ class UploadService
     public function uploadFile(FileRequest $request)
     {
         $file = $request->file('file');
-
-        $file_name = $file->getClientOriginalName();
-        $file_path = $file->storeAs('files', $file_name, 'public');
+        $fileName = $file->getClientOriginalName();
+        $file_path = $file->storeAs('files', $fileName, 'public');
 
         try {
-            $result = $this->repository->storeFile(
-                UploadDTO::fromRequest($request, $file_path),
-                $file_path 
-            );
+
+            $result = $this->repository->storeFile(UploadDTO::fromRequest($request, $file_path));
 
             return $result;
         } catch (Exception $e) {

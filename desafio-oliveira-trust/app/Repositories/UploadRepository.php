@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repositories;
 
 use App\DTOs\UploadDTO;
@@ -20,30 +19,30 @@ class UploadRepository
     {
         $query = $this->model->query();
 
-        if (!empty($filters['file_name'])) {
+        if (! empty($filters['file_name'])) {
             $query->where('file_name', 'like', '%' . $filters['file_name'] . '%');
         }
 
-        if (!empty($filters['reference_date'])) {
+        if (! empty($filters['reference_date'])) {
             $query->where('reference_date', 'like', $filters['reference_date'] . '%');
         }
 
         return $query->orderBy('created_at', 'desc')->paginate(10);
     }
 
-    private function fileExists(string $file_name): bool
+    private function fileExists(string $file): bool
     {
-        return $this->model->where('file_name', $file_name)->exists();
+        return $this->model->where('file_name', $file)->exists();
     }
 
-    public function storeFile(UploadDTO $dto, $file)
+    public function storeFile(UploadDTO $dto)
     {
         if ($this->fileExists($dto->file_name)) {
             throw new \Exception('File already exists');
         }
 
         $upload = $this->model->create([
-            'file_name'      => $dto->file_name,
+            'file_name'           => $dto->file_name,
             'file_path'      => $dto->file_path,
             'reference_date' => $dto->reference_date,
         ]);
