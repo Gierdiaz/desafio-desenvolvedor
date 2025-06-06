@@ -17,9 +17,9 @@ class ImportContentCommand extends Command
     public function handle(): void
     {
         $filename = $this->argument('filename');
-        $path = storage_path("app/{$filename}");
+        $path     = storage_path("app/{$filename}");
 
-        if (! File::exists($path)) {
+        if (!File::exists($path)) {
             $this->error("Arquivo CSV não encontrado: {$path}");
 
             return;
@@ -37,7 +37,7 @@ class ImportContentCommand extends Command
 
             $this->info('Importação concluída com sucesso!');
         } catch (\Exception $e) {
-            $this->error('Erro durante a importação: '.$e->getMessage());
+            $this->error('Erro durante a importação: ' . $e->getMessage());
         }
     }
 }

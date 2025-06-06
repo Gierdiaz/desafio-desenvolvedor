@@ -15,12 +15,12 @@ class ContentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'RptDt' => $this->RptDt,
-            'TckrSymb' => $this->TckrSymb,
-            'MktNm' => $this->MktNm,
+            'RptDt'      => $this->RptDt,
+            'TckrSymb'   => $this->TckrSymb,
+            'MktNm'      => $this->MktNm,
             'SctyCtgyNm' => $this->SctyCtgyNm,
-            'ISIN' => $this->ISIN,
-            'CrpnNm' => $this->CrpnNm,
+            'ISIN'       => $this->ISIN,
+            'CrpnNm'     => $this->CrpnNm,
         ];
     }
 }

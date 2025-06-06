@@ -20,12 +20,12 @@ class UploadRepository
     {
         $query = $this->model->query();
 
-        if (! empty($filters['file_name'])) {
-            $query->where('file_name', 'like', '%'.$filters['file_name'].'%');
+        if (!empty($filters['file_name'])) {
+            $query->where('file_name', 'like', '%' . $filters['file_name'] . '%');
         }
 
-        if (! empty($filters['reference_date'])) {
-            $query->where('reference_date', 'like', $filters['reference_date'].'%');
+        if (!empty($filters['reference_date'])) {
+            $query->where('reference_date', 'like', $filters['reference_date'] . '%');
         }
 
         return $query->orderBy('created_at', 'desc')->paginate(10);
@@ -43,17 +43,17 @@ class UploadRepository
         }
 
         $upload = $this->model->create([
-            'file_name' => $dto->file_name,
-            'file_path' => $dto->file_path,
+            'file_name'      => $dto->file_name,
+            'file_path'      => $dto->file_path,
             'reference_date' => $dto->reference_date,
         ]);
 
         Excel::import(new ContentImport($upload->id), $file);
 
         return [
-            'status' => true,
+            'status'  => true,
             'message' => 'File uploaded successfully',
-            'upload' => $upload,
+            'upload'  => $upload,
         ];
     }
 }

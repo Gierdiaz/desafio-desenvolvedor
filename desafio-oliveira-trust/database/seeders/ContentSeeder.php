@@ -17,8 +17,8 @@ class ContentSeeder extends Seeder
 
         $file = storage_path('app/InstrumentsConsolidatedFile_20250605_1.csv');
 
-        if (! File::exists($file)) {
-            $this->command->error('Arquivo CSV não encontrado: '.$file);
+        if (!File::exists($file)) {
+            $this->command->error('Arquivo CSV não encontrado: ' . $file);
 
             return;
         }
@@ -32,7 +32,7 @@ class ContentSeeder extends Seeder
 
             $this->command->info('CSV importado com sucesso usando ContentImport!');
         } catch (\Exception $e) {
-            $this->command->error('Erro ao importar: '.$e->getMessage());
+            $this->command->error('Erro ao importar: ' . $e->getMessage());
         }
     }
 }

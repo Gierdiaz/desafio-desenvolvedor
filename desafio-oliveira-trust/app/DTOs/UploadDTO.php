@@ -10,7 +10,8 @@ class UploadDTO
         public string $file_name,
         public string $file_path,
         public string $reference_date,
-    ) {}
+    ) {
+    }
 
     public static function fromRequest(Request $request, string $filePath): self
     {

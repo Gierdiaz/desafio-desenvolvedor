@@ -17,12 +17,12 @@ class ContentRepository
     {
         $query = $this->model->query();
 
-        if (! empty($filters['TckrSymb'])) {
+        if (!empty($filters['TckrSymb'])) {
             $query->where('TckrSymb', $filters['TckrSymb']);
         }
 
-        if (! empty($filters['RptDt'])) {
-            $query->where('RptDt', 'like', $filters['RptDt'].'%');
+        if (!empty($filters['RptDt'])) {
+            $query->where('RptDt', 'like', $filters['RptDt'] . '%');
         }
 
         $hasFilters = collect($filters)->filter()->isNotEmpty();

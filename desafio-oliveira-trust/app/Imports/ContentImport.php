@@ -4,10 +4,7 @@ namespace App\Imports;
 
 use App\Models\Content;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\{ToCollection, WithChunkReading, WithCustomCsvSettings, WithHeadingRow};
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 // Serve para evitar que o Laravel Excel altere o cabeçalho quando eu uso a interface WithHeadingRow
@@ -27,13 +24,13 @@ class ContentImport implements ToCollection, WithChunkReading, WithCustomCsvSett
         foreach ($rows as $row) {
 
             Content::create([
-                'upload_id' => $this->uploadId,
-                'RptDt' => $row['RptDt'],
-                'TckrSymb' => $row['TckrSymb'],
-                'MktNm' => $row['MktNm'],
+                'upload_id'  => $this->uploadId,
+                'RptDt'      => $row['RptDt'],
+                'TckrSymb'   => $row['TckrSymb'],
+                'MktNm'      => $row['MktNm'],
                 'SctyCtgyNm' => $row['SctyCtgyNm'],
-                'ISIN' => $row['ISIN'],
-                'CrpnNm' => $row['CrpnNm'],
+                'ISIN'       => $row['ISIN'],
+                'CrpnNm'     => $row['CrpnNm'],
             ]);
         }
     }

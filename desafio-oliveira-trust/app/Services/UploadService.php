@@ -38,6 +38,7 @@ class UploadService
             return $result;
         } catch (Exception $e) {
             Storage::disk('public')->delete($file_path);
+
             throw $e;
         }
     }
