@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('upload_id')->constrained('uploads')->onDelete('cascade');
-            $table->dateTime('RptDt');
-            $table->string('TckrSymb');
-            $table->string('MktNm');
-            $table->string('SctyCtgyNm');
-            $table->string('ISIN');
-            $table->string('CrpnNm');
+            $table->foreignId('upload_id')->nullable()->constrained('uploads')->onDelete('cascade');
+            $table->dateTime('RptDt')->nullable();
+            $table->string('TckrSymb')->nullable();
+            $table->string('MktNm')->nullable();
+            $table->string('SctyCtgyNm')->nullable();
+            $table->string('ISIN')->nullable();
+            $table->string('CrpnNm')->nullable();
             $table->timestamps();
         });
     }
