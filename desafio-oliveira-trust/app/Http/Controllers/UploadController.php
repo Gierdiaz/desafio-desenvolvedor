@@ -28,7 +28,7 @@ class UploadController extends Controller
     {
         try {
             $result = $this->service->uploadFile($request);
-
+           
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(

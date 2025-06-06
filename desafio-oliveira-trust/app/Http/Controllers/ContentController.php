@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ContentResource;
+use App\Http\Resources\{ContentResource};
 use App\Services\ContentService;
 use Illuminate\Http\Request;
 
@@ -17,10 +17,11 @@ class ContentController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['tckr_symb', 'rpt_dt']);
+        $filters = $request->only(['TckrSymb', 'RptDt']);
 
         $contents = $this->service->getContent($filters);
 
         return ContentResource::collection($contents);
+
     }
 }

@@ -4,17 +4,13 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class ContentResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'RptDt'      => $this->RptDt,
             'TckrSymb'   => $this->TckrSymb,
             'MktNm'      => $this->MktNm,
@@ -22,5 +18,16 @@ class ContentResource extends JsonResource
             'ISIN'       => $this->ISIN,
             'CrpnNm'     => $this->CrpnNm,
         ];
+
+        $hasFilters = $request->filled('TckrSymb') || $request->filled('RptDt');
+
+        // Só adiciona HATEOAS se não houver filtros
+        if (!$hasFilters) {
+            $data['_links'] = [
+                'self' => url("/api/contents?TckrSymb={$this->TckrSymb}&RptDt=" . Str::substr($this->RptDt, 0, 10)),
+            ];
+        }
+
+        return $data;
     }
 }

@@ -6,6 +6,7 @@ use App\DTOs\UploadDTO;
 use App\Http\Requests\FileRequest;
 use App\Repositories\UploadRepository;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class UploadService
@@ -32,7 +33,7 @@ class UploadService
         try {
             $result = $this->repository->storeFile(
                 UploadDTO::fromRequest($request, $file_path),
-                $file
+                $file_path 
             );
 
             return $result;

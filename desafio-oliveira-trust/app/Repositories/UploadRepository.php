@@ -48,7 +48,8 @@ class UploadRepository
             'reference_date' => $dto->reference_date,
         ]);
 
-        Excel::import(new ContentImport($upload->id), $file);
+        // Excel::import(new ContentImport($upload->id), $file);
+        Excel::import(new ContentImport($upload->id), storage_path('app/public/' . $dto->file_path));
 
         return [
             'status'  => true,
