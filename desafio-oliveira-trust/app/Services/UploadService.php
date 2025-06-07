@@ -5,6 +5,7 @@ use App\DTOs\UploadDTO;
 use App\Http\Requests\FileRequest;
 use App\Repositories\UploadRepository;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class UploadService
@@ -21,9 +22,8 @@ class UploadService
         return $this->repository->getUploadHistory($filters);
     }
 
-    public function uploadFile(FileRequest $request)
+    public function uploadFile(Request $request)
     {
-        dd($request);
         $file = $request->file('file');
         $fileName = $file->getClientOriginalName();
         $file_path = $file->storeAs('files', $fileName, 'public');

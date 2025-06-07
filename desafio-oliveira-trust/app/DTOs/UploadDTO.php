@@ -2,6 +2,7 @@
 namespace App\DTOs;
 
 use App\Http\Requests\FileRequest;
+use Illuminate\Http\Request;
 
 class UploadDTO
 {
@@ -12,9 +13,10 @@ class UploadDTO
     ) {
     }
 
-    public static function fromRequest(FileRequest $request, string $filePath): self
+    public static function fromRequest(Request $request, string $filePath): self
     {
         return new self(
+            
             file_name: $request->file('file')->getClientOriginalName(),
             file_path: $filePath,
             reference_date: now()->toDateString()

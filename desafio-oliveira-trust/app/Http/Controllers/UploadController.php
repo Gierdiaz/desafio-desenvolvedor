@@ -24,7 +24,7 @@ class UploadController extends Controller
         return response()->json($uploads);
     }
 
-    public function store(FileRequest $request)
+    public function store(Request $request)
     {
         try {
             $result = $this->service->uploadFile($request);
