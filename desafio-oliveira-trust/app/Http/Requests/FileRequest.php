@@ -22,15 +22,15 @@ class FileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|mimetypes:text/plain,text/csv,application/csv,application/vnd.ms-excel',
+            'file' => 'required|file|max:50000|mimetypes:text/plain,text/csv,application/csv,application/vnd.ms-excel',
         ];
     }
 
     public function messages()
     {
         return [
-            'file.required' => 'O arquivo é obrigatório.',
-            'file.file' => 'O campo deve ser um arquivo válido.',
+            'file.required'  => 'O arquivo é obrigatório.',
+            'file.file'      => 'O campo deve ser um arquivo válido.',
             'file.mimetypes' => 'O arquivo deve estar no formato CSV válido (texto ou compatível com Excel). Verifique se ele foi salvo corretamente como ".csv".',
 
         ];

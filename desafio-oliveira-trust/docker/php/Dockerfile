@@ -17,7 +17,11 @@ RUN apt-get update && apt-get install -y \
 
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-COPY docker/php/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+RUN echo "file_uploads=On\n\
+memory_limit=512M\n\
+upload_max_filesize=100M\n\
+post_max_size=100M\n\
+max_execution_time=300" > /usr/local/etc/php/conf.d/custom_uploads.ini
 
 WORKDIR /var/www/html
 

@@ -14,7 +14,7 @@ class UploadDTO
     }
 
     public static function fromRequest(FileRequest $request, string $filePath): self
-    {   
+    {
         return new self(
             file_name: $request->file('file')->getClientOriginalName(),
             file_path: $filePath,

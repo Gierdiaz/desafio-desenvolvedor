@@ -12,8 +12,6 @@ class AuthController extends Controller
 {
     public function register(AuthRequest $request)
     {
-        Log::info('===================== Iniciando registro de usuário =====================', ['email' => $request->email]);
-
         $validatedData = $request->validated();
 
         try {
@@ -23,26 +21,24 @@ class AuthController extends Controller
                 'password' => Hash::make($validatedData['password']),
             ]);
 
-            Log::info('===================== Usuário registrado com sucesso.', ['user_id' => $user->id]);
+            Log::info('===================== User registered successfully.', ['user_id' => $user->id]);
 
             return response()->json(['message' => 'User registered successfully'], 201);
         } catch (\Exception $e) {
-            Log::error('Erro ao registrar usuário.', ['error' => $e->getMessage()]);
+            Log::error(['error' => $e->getMessage()]);
 
-            return response()->json(['error' => 'Erro ao registrar usuário.'], 500);
+            return response()->json(['error' => 'Error registering user.'], 500);
         }
     }
 
     public function login(AuthRequest $request)
     {
-        Log::info('===================== Tentativa de login ====================', ['email' => $request->email]);
-
         $validatedData = $request->validated();
 
         $user = User::where('email', $validatedData['email'])->first();
 
         if (!$user || !Hash::check($validatedData['password'], $user->password)) {
-            Log::warning('Falha no login. Credenciais incorretas.', ['email' => $request->email]);
+            Log::warning('Login failed. Incorrect credentials.', ['email' => $request->email]);
 
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
@@ -51,7 +47,7 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        Log::info('Usuário autenticado com sucesso.', ['user_id' => $user->id]);
+        Log::info('User authenticated successfully.', ['user_id' => $user->id]);
 
         return response()->json([
             'access_token' => $token,
@@ -61,15 +57,13 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Log::info('===================== Tentativa de logout  =====================', ['user_id' => $request->user()->id ?? null]);
-
         $token = $request->user()->currentAccessToken();
 
         if ($token) {
             $token->delete();
-            Log::info('Usuário deslogado com sucesso.', ['user_id' => $request->user()->id]);
+            Log::info('User logged out successfully.', ['user_id' => $request->user()->id]);
         } else {
-            Log::warning('Tentativa de logout sem token válido.', ['user_id' => $request->user()->id ?? null]);
+            Log::warning('Attempt to log out without a valid token.', ['user_id' => $request->user()->id ?? null]);
         }
 
         return response()->json(['message' => 'Logged out successfully'], 200);

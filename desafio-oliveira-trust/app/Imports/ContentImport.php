@@ -21,18 +21,32 @@ class ContentImport implements ToCollection, WithChunkReading, WithCustomCsvSett
 
     public function collection(Collection $rows)
     {
-        foreach ($rows as $row) {
+        $data = [];
 
-            Content::create([
-                'upload_id'  => $this->uploadId,
-                'RptDt'      => $row['RptDt'],
-                'TckrSymb'   => $row['TckrSymb'],
-                'MktNm'      => $row['MktNm'],
-                'SctyCtgyNm' => $row['SctyCtgyNm'],
-                'ISIN'       => $row['ISIN'],
-                'CrpnNm'     => $row['CrpnNm'],
-            ]);
+        foreach ($rows as $row) {
+            if (
+                isset($row['RptDt']) &&
+                isset($row['TckrSymb']) &&
+                isset($row['MktNm']) &&
+                isset($row['SctyCtgyNm']) &&
+                isset($row['ISIN']) &&
+                isset($row['CrpnNm'])
+            ) {
+                $data[] = [
+                    'upload_id'  => $this->uploadId,
+                    'RptDt'      => $row['RptDt'] ?? null,
+                    'TckrSymb'   => $row['TckrSymb'],
+                    'MktNm'      => $row['MktNm'],
+                    'SctyCtgyNm' => $row['SctyCtgyNm'],
+                    'ISIN'       => $row['ISIN'],
+                    'CrpnNm'     => $row['CrpnNm'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
         }
+
+        Content::insert($data);
     }
 
     public function chunkSize(): int
