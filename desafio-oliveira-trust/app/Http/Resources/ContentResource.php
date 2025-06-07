@@ -11,7 +11,7 @@ class ContentResource extends JsonResource
     public function toArray(Request $request): array
     {
         $data = [
-            'RptDt'      => $this->RptDt,
+            'RptDt'      => $this->RptDt->toDateString(),
             'TckrSymb'   => $this->TckrSymb,
             'MktNm'      => $this->MktNm,
             'SctyCtgyNm' => $this->SctyCtgyNm,
@@ -24,7 +24,10 @@ class ContentResource extends JsonResource
         // Só adiciona HATEOAS se não houver filtros
         if (!$hasFilters) {
             $data['_links'] = [
-                'self' => url("/api/contents?TckrSymb={$this->TckrSymb}&RptDt=" . Str::substr($this->RptDt, 0, 10)),
+                'self' => route('contents.index', [
+                    'TckrSymb' => $this->TckrSymb,
+                    'RptDt'    => $this->RptDt->toDateString(),
+                ]),
             ];
         }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FileRequest;
+use App\Http\Resources\UploadResource;
 use App\Services\UploadService;
 use Illuminate\Http\{Request, Response};
 
@@ -21,15 +22,15 @@ class UploadController extends Controller
 
         $uploads = $this->service->getUploads($filters);
 
-        return response()->json($uploads);
+        return UploadResource::collection($uploads);
     }
 
-    public function store(Request $request)
+    public function store(FileRequest $request)
     {
         try {
-            $result = $this->service->uploadFile($request);
-           
-            return response()->json($result);
+            $upload = $this->service->uploadFile($request);
+
+            return new UploadResource($upload);
         } catch (\Exception $e) {
             return response()->json(
                 ['error' => true, 'message' => $e->getMessage()],

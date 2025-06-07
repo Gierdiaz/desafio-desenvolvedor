@@ -1,9 +1,11 @@
 <?php
+
 namespace App\Repositories;
 
 use App\DTOs\UploadDTO;
 use App\Imports\ContentImport;
 use App\Models\Upload;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UploadRepository
@@ -15,15 +17,15 @@ class UploadRepository
         $this->model = $model;
     }
 
-    public function getUploadHistory(array $filters = [])
+    public function getUploadHistory(array $filters = []): LengthAwarePaginator
     {
         $query = $this->model->query();
 
-        if (! empty($filters['file_name'])) {
+        if (!empty($filters['file_name'])) {
             $query->where('file_name', 'like', '%' . $filters['file_name'] . '%');
         }
 
-        if (! empty($filters['reference_date'])) {
+        if (!empty($filters['reference_date'])) {
             $query->where('reference_date', 'like', $filters['reference_date'] . '%');
         }
 
@@ -35,25 +37,20 @@ class UploadRepository
         return $this->model->where('file_name', $file)->exists();
     }
 
-    public function storeFile(UploadDTO $dto)
+    public function storeFile(UploadDTO $dto): Upload
     {
         if ($this->fileExists($dto->file_name)) {
             throw new \Exception('File already exists');
         }
 
         $upload = $this->model->create([
-            'file_name'           => $dto->file_name,
+            'file_name'      => $dto->file_name,
             'file_path'      => $dto->file_path,
             'reference_date' => $dto->reference_date,
         ]);
 
-        // Excel::import(new ContentImport($upload->id), $file);
         Excel::import(new ContentImport($upload->id), storage_path('app/public/' . $dto->file_path));
 
-        return [
-            'status'  => true,
-            'message' => 'File uploaded successfully',
-            'upload'  => $upload,
-        ];
+        return $upload;
     }
 }

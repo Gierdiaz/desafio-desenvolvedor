@@ -20,7 +20,7 @@ class Content extends Model
     ];
 
     protected $casts = [
-        'RptDt' => 'datetime',
+        'RptDt' => 'date',
     ];
 
     public function upload(): BelongsTo

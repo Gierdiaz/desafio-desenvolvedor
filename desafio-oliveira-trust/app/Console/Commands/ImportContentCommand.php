@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Console\Commands;
 
 use App\Imports\ContentImport;
@@ -18,7 +19,7 @@ class ImportContentCommand extends Command
         $filename = $this->argument('filename');
         $path     = storage_path("app/{$filename}");
 
-        if (! File::exists($path)) {
+        if (!File::exists($path)) {
             $this->error("Arquivo CSV não encontrado: {$path}");
 
             return;

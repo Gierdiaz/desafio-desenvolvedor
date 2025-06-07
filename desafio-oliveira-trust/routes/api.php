@@ -31,5 +31,5 @@ Route::prefix('/v1')
         Route::get('/upload-history', [UploadController::class, 'index']);
         Route::post('/uploads', [UploadController::class, 'store']);
 
-        Route::get('/contents', [ContentController::class, 'index']);       
+        Route::get('/contents', [ContentController::class, 'index'])->name('contents.index');
     });
