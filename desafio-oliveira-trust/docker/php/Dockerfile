@@ -5,47 +5,33 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg62-turbo-dev \
     libfreetype6-dev \
-    locales \
-    zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    unzip \
-    git \
-    curl \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
-    libcurl4-openssl-dev \
-    libssl-dev \
-    zlib1g-dev \
-    libpng-dev \
-    libjpeg-dev \
+    zip unzip curl git \
     libpq-dev \
+    libssl-dev \
     libicu-dev \
     libxslt1-dev \
-    cron \
-    supervisor \
-    && docker-php-ext-install pdo_pgsql mbstring zip exif pcntl bcmath gd sockets
+    && docker-php-ext-install pdo pdo_pgsql mbstring zip exif pcntl bcmath gd intl xsl sockets
 
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY composer.json composer.lock ./
-
-RUN composer install --no-scripts --no-autoloader
-
 COPY . .
 
 COPY .env.example .env
 
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html \
-    && chmod -R 775 /var/www/html/storage \
-    && chmod -R 777 /var/www/html/storage \
-    && chmod -R 775 /var/www/html/bootstrap/cache
+RUN composer install --optimize-autoloader --no-dev
 
-RUN composer dump-autoload --optimize
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R ug+rwX storage bootstrap/cache
+
+RUN php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache \
+    && composer dump-autoload --optimize
 
 EXPOSE 9000
 

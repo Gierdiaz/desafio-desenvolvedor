@@ -23,6 +23,7 @@ class UploadService
 
     public function uploadFile(FileRequest $request)
     {
+        dd($request);
         $file = $request->file('file');
         $fileName = $file->getClientOriginalName();
         $file_path = $file->storeAs('files', $fileName, 'public');
