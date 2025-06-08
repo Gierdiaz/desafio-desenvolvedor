@@ -3,10 +3,9 @@
 namespace App\Repositories;
 
 use App\DTOs\UploadDTO;
-use App\Imports\ContentImport;
+use App\Jobs\ImportContentJob;
 use App\Models\Upload;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Maatwebsite\Excel\Facades\Excel;
 
 class UploadRepository
 {
@@ -47,9 +46,10 @@ class UploadRepository
             'file_name'      => $dto->file_name,
             'file_path'      => $dto->file_path,
             'reference_date' => $dto->reference_date,
+            'status'         => 'pending',
         ]);
 
-        Excel::import(new ContentImport($upload->id), storage_path('app/public/' . $dto->file_path));
+        ImportContentJob::dispatch($upload);
 
         return $upload;
     }

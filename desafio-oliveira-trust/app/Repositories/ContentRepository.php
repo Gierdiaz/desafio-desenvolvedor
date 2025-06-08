@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Content;
+use Illuminate\Support\Facades\Cache;
 
 class ContentRepository
 {
@@ -15,18 +16,30 @@ class ContentRepository
 
     public function filteringByTckrSymbOrRptDt(array $filters = [])
     {
-        $query = $this->model->query();
+        $cacheKey = $this->makeCacheKey($filters);
 
-        if (!empty($filters['TckrSymb'])) {
-            $query->where('TckrSymb', $filters['TckrSymb']);
-        }
+        return Cache::remember($cacheKey, now()->addMinutes(10), function () use ($filters) {
+            $query = $this->model->query();
 
-        if (!empty($filters['RptDt'])) {
-            $query->where('RptDt', 'like', $filters['RptDt'] . '%');
-        }
+            if (!empty($filters['TckrSymb'])) {
+                $query->where('TckrSymb', $filters['TckrSymb']);
+            }
 
-        $hasFilters = collect($filters)->filter()->isNotEmpty();
+            if (!empty($filters['RptDt'])) {
+                $query->where('RptDt', 'like', $filters['RptDt'] . '%');
+            }
 
-        return $hasFilters ? $query->get() : $query->paginate(10);
+            $hasFilters = collect($filters)->filter()->isNotEmpty();
+
+            return $hasFilters ? $query->get() : $query->paginate(10);
+        });
+    }
+
+    private function makeCacheKey(array $filters): string
+    {
+        ksort($filters);
+        $serialized = json_encode($filters);
+
+        return 'contents:' . md5($serialized);
     }
 }

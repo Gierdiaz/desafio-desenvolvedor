@@ -16,11 +16,14 @@ class Upload extends Model
         'file_name',
         'file_path',
         'reference_date',
+        'status',
     ];
 
     protected $casts = [
         'reference_date' => 'date',
     ];
+
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function contents(): HasMany
     {

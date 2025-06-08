@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Jobs\ImportContentJob;
 use App\Models\{Upload, User};
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\{Queue, Storage};
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -31,6 +32,9 @@ class UploadTest extends TestCase
     }
     public function test_can_upload_file(): void
     {
+
+        Queue::fake();
+
         // CSV de exemplo
         $csvContent = <<<CSV
         RptDt;TckrSymb;MktNm;SctyCtgyNm;ISIN;CrpnNm
@@ -60,6 +64,8 @@ class UploadTest extends TestCase
         $this->assertDatabaseHas('uploads', [
             'file_name' => $file->getClientOriginalName(),
         ]);
+
+        Queue::assertPushed(ImportContentJob::class);
     }
 
     public function test_can_return_upload_history(): void

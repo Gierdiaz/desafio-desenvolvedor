@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Content;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Concerns\{ToCollection, WithChunkReading, WithCustomCsvSettings, WithHeadingRow};
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
@@ -47,6 +48,8 @@ class ContentImport implements ToCollection, WithChunkReading, WithCustomCsvSett
         }
 
         Content::insert($data);
+
+        Cache::flush();
     }
 
     public function chunkSize(): int
