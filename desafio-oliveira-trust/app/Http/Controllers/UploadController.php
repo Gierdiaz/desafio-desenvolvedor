@@ -30,7 +30,9 @@ class UploadController extends Controller
         try {
             $upload = $this->service->uploadFile($request);
 
-            return new UploadResource($upload);
+            return (new UploadResource($upload))
+                ->response()
+                ->setStatusCode(Response::HTTP_CREATED);
         } catch (\Exception $e) {
             return response()->json(
                 ['error' => true, 'message' => $e->getMessage()],
