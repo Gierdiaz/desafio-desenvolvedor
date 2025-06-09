@@ -17,7 +17,7 @@ class ImportContentJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    protected $upload;
+    public $upload;
 
     public function __construct(Upload $upload)
     {
@@ -30,17 +30,32 @@ class ImportContentJob implements ShouldQueue
 
         $filePath = storage_path('app/public/' . $this->upload->file_path);
 
-        $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if (!file_exists($filePath)) {
+            $this->upload->update(['status' => 'error']);
 
-        if (isset($lines[0]) && str_starts_with($lines[0], 'Status do Arquivo')) {
-            unset($lines[0]);
-            $cleanedFile = implode("\n", $lines);
-
-            file_put_contents($filePath, $cleanedFile);
+            return;
         }
+
+        $lines    = fopen($filePath, 'r');
+        $tempPath = $filePath . '.tmp';
+        $temp     = fopen($tempPath, 'w');
+
+        $firstLine = fgets($lines);
+
+        if (!str_starts_with(trim($firstLine), 'Status do Arquivo')) {
+            fwrite($temp, $firstLine);
+        }
+
+        while (($line = fgets($lines)) !== false) {
+            fwrite($temp, $line);
+        }
+
+        fclose($lines);
+        fclose($temp);
+        rename($tempPath, $filePath);
+
         Excel::import(new ContentImport($this->upload->id), $filePath);
 
         $this->upload->update(['status' => 'completed']);
     }
-
 }

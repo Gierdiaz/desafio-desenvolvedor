@@ -21,7 +21,7 @@ RUN echo "file_uploads=On\n\
 memory_limit=512M\n\
 upload_max_filesize=100M\n\
 post_max_size=100M\n\
-max_execution_time=300" > /usr/local/etc/php/conf.d/custom_uploads.ini
+max_execution_time=600" > /usr/local/etc/php/conf.d/custom_uploads.ini
 
 WORKDIR /var/www/html
 
